@@ -1,7 +1,7 @@
-from . import GameObject
+from .character import Character
 import pygame
 
-class Vaxman(GameObject):
+class Vaxman(Character):
 
     def handle_input(self, event):
         super().handle_input(event)
