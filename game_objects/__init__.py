@@ -1,23 +1,6 @@
-import pygame
-
+from .vector import Vector2
 from game import Game
-
-# For position and physics
-class Vector2:
-
-    def __init__(self, x = 0, y = 0):
-        self.x = x
-        self.y = y
-
-    
-    def __repr__(self) -> str:
-        return '<Vector x: %.2f, y: %.2f>' % (self.x, self.y)
-
-    
-    def to_tuple(self):
-        # for ease of use in pygame methods
-        return (self.x, self.y)
-
+import pygame
 
 # Monolithic class hierarchy since it is a simple game
 class GameObject():
@@ -33,6 +16,8 @@ class GameObject():
         self.radius = 10
         
         self.movement_speed = 125
+
+        self.tag = ""
 
 
     # This will be call on Game draw method
@@ -55,27 +40,3 @@ class GameObject():
 
     def handle_input(self, event):
         pass
-
-
-class Vaxman(GameObject):
-
-    def handle_input(self, event):
-        super().handle_input(event)
-        
-        if event.type == pygame.KEYDOWN:
-
-            if event.key == pygame.K_w:
-                self.direction.y = -1
-                self.direction.x = 0
-
-            if event.key == pygame.K_s:
-                self.direction.y = 1
-                self.direction.x = 0
-
-            if event.key == pygame.K_d:
-                self.direction.x = 1
-                self.direction.y = 0
-
-            if event.key == pygame.K_a:
-                self.direction.x = -1
-                self.direction.y = 0
