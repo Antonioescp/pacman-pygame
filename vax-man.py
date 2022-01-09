@@ -1,12 +1,20 @@
 from game import Game
+from game_objects.vaxman import Vaxman
 
 def main():
-    vax_man = Game()
+    
+    # Main character
+    vax_man = Vaxman()
+    vax_man.color = (255, 255, 0)
 
-    if vax_man.initialized:
-        vax_man.run_loop()
+    game = Game()
 
-    vax_man.shutdown()
+    game.add_game_object(vax_man)
+
+    game.run_loop()
+
+    game.shutdown()
+
 
 if __name__ == "__main__":
     main()
