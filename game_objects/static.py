@@ -3,11 +3,15 @@ import pygame
 
 class Food(GameObject):
 
+    remaining = 0
+
     def __init__(self, eater):
         super().__init__()
 
         self.radius = 2
         self.eater = eater
+
+        Food.remaining += 1
 
     
     def draw(self, screen):
@@ -22,8 +26,9 @@ class Food(GameObject):
         distance = self.position.distance_to(self.eater.position)
 
         if distance <= (self.radius + self.eater.radius):
-            print("Food eaten")
+
             self.must_destroy = True
+            Food.remaining -= 1
 
 
 class Wall(GameObject):
