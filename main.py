@@ -42,17 +42,26 @@ wall.rect.width = WALL_THICKNESS
 wall.rect.topright = (Game.SCREEN_WIDTH, 0)
 walls.append(wall)
 
-wall = Wall()
-wall.rect.height = WALL_THICKNESS
-wall.rect.width = 50
-wall.rect.topleft = (walls[0].rect.topright[0] + WALL_THICKNESS + 2, walls[0].rect.topright[1] + WALL_THICKNESS * 2 + 2)
-walls.append(wall)
+# Inner walls
+WALLS_PER_COLUMN = (Game.SCREEN_HEIGHT // WALL_THICKNESS - 2) // 2
+WALLS_PER_ROW = 3
+
+starting_position = Vector2(walls[0].rect.topright[0] + WALL_THICKNESS, walls[0].rect.topright[1] + WALL_THICKNESS * 2)
+
+for h_level in range(WALLS_PER_COLUMN):
+    for w_level in range(WALLS_PER_ROW):
+        wall = Wall()
+        wall.rect.height = WALL_THICKNESS
+        wall.rect.width = WALL_THICKNESS * 3
+        wall.rect.topleft = (starting_position.x + WALL_THICKNESS * 4 * w_level, starting_position.y + WALL_THICKNESS * 2 * h_level)
+        walls.append(wall)
 
 # Dependency injection
 vax_man.walls = walls
 
 # creating food
 starting_position = Vector2(WALL_THICKNESS + WALL_THICKNESS // 2, WALL_THICKNESS + WALL_THICKNESS // 2)
+
 for h in range(Game.SCREEN_HEIGHT // WALL_THICKNESS - 2):
     for w in range(Game.SCREEN_WIDTH // WALL_THICKNESS - 2):
         position = Vector2(starting_position.x + WALL_THICKNESS * w, starting_position.y + WALL_THICKNESS * h)
@@ -63,6 +72,7 @@ for h in range(Game.SCREEN_HEIGHT // WALL_THICKNESS - 2):
                 position.y >= wall.rect.top and position.y <= wall.rect.bottom:
 
                 in_wall = True
+                break
 
         if in_wall:
             continue
@@ -70,6 +80,7 @@ for h in range(Game.SCREEN_HEIGHT // WALL_THICKNESS - 2):
         food = Food(vax_man)
         food.position = position
         actors.append(food)
+
 
 # adding to game actors
 for item in walls:

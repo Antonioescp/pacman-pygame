@@ -13,7 +13,7 @@ class Character(GameObject):
         self.direction = Vector2()
 
         self.movement_speed = 125
-        self.radius = 10
+        self.radius = 8
 
     
     def draw(self, screen):
