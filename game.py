@@ -6,8 +6,8 @@ class Game():
     MILISECONDS_IN_SECOND = 1000
     MILISECONDS_BETWEEN_FRAMES = MILISECONDS_IN_SECOND / FRAMES_PER_SECOND
 
-    SCREEN_WIDTH = 500
-    SCREEN_HEIGHT = 500
+    SCREEN_WIDTH = 300
+    SCREEN_HEIGHT = 300
 
     def __init__(self):
         pygame.init()
