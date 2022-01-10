@@ -14,7 +14,7 @@ class Game():
 
         self.screen = pygame.display.set_mode([Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT])
 
-        self.gameObjects = []
+        self.game_objects = []
         self.tickCount = 0
         self.clock = pygame.time.Clock()
 
@@ -33,7 +33,7 @@ class Game():
                     self.isRunning = False
 
             
-            for gameObject in self.gameObjects:
+            for gameObject in self.game_objects:
                 gameObject.handle_input(event)
 
 
@@ -44,15 +44,18 @@ class Game():
         deltaTime = (pygame.time.get_ticks() - self.tickCount) / Game.MILISECONDS_IN_SECOND
         self.tickCount = pygame.time.get_ticks()
         
-        for gameObject in self.gameObjects:
-            gameObject.update(deltaTime)
+        for game_object in self.game_objects:
+            game_object.update(deltaTime)
+
+            if game_object.must_destroy:
+                self.game_objects.remove(game_object)
 
 
     def generate_output(self):
 
         self.screen.fill((0, 0, 0))
         
-        for gameObject in self.gameObjects:
+        for gameObject in self.game_objects:
             gameObject.draw(self.screen)
 
         pygame.display.flip()
@@ -66,11 +69,11 @@ class Game():
 
 
     def add_game_object(self, game_object):
-        self.gameObjects.append(game_object)
+        self.game_objects.append(game_object)
     
 
     def remove_game_object(self, game_object):
-        self.gameObjects.remove(game_object)
+        self.game_objects.remove(game_object)
 
 
     def shutdown(self):

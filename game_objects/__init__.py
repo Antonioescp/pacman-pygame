@@ -1,4 +1,4 @@
-from .vector import Vector2
+from pygame.math import Vector2
 from game import Game
 
 # Monolithic class hierarchy since it is a simple game
@@ -10,7 +10,8 @@ class GameObject():
         self.position = Vector2(Game.SCREEN_WIDTH / 2, Game.SCREEN_HEIGHT / 2)
 
         self.color = (255, 255, 255)
-        self.radius = 10
+
+        self.must_destroy = False
 
 
     # This will be call on Game draw method
