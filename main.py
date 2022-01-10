@@ -2,8 +2,11 @@ from pygame import Vector2
 from game import Game
 from game_objects.characters import Ghost, Vaxman
 from game_objects.static import Food, Wall
+import random
 
 WALL_THICKNESS = 20
+
+game = Game()
 
 # All objects in the game
 actors = []
@@ -44,7 +47,7 @@ walls.append(wall)
 
 # Inner walls
 WALLS_PER_COLUMN = (Game.SCREEN_HEIGHT // WALL_THICKNESS - 2) // 2
-WALLS_PER_ROW = 3
+WALLS_PER_ROW = (Game.SCREEN_WIDTH - WALL_THICKNESS * 4) // (WALL_THICKNESS * 3)
 
 starting_position = Vector2(walls[0].rect.topright[0] + WALL_THICKNESS, walls[0].rect.topright[1] + WALL_THICKNESS * 2)
 
@@ -81,17 +84,31 @@ for h in range(Game.SCREEN_HEIGHT // WALL_THICKNESS - 2):
         food.position = position
         actors.append(food)
 
-
 # adding to game actors
-for item in walls:
-    actors.append(item)
-
 actors.append(vax_man)
 
-game = Game()
+for wall in walls:
+    actors.append(wall)
+
+
+# adding ghosts
+for n in range(0, 7):
+    ghost = Ghost(vax_man, game)
+    initial_position = Vector2(Game.SCREEN_WIDTH - WALL_THICKNESS - ghost.radius - 1, WALL_THICKNESS + ghost.radius + 1)
+    ghost.position.xy = (initial_position.x, initial_position.y + WALL_THICKNESS * 2 * n)
+    
+    if random.randint(0, 1) == 0:
+        ghost.direction.x = random.randrange(-1, 1, 2)
+    else:
+        ghost.direction.y = random.randrange(-1, 1, 2)
+
+    ghost.walls = walls
+    actors.append(ghost)
+
 
 for actor in actors:
     game.add_game_object(actor)
+
 
 game.run_loop()
 
