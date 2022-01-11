@@ -1,13 +1,21 @@
 from config import INITIAL_AMOUNT_OF_GHOSTS, SCREEN_HEIGHT, SCREEN_WIDTH, FRAMES_PER_SECOND, MILISECONDS_IN_SECOND
+import game_objects
 from game_objects.characters import Ghost
 from game_objects.static import Food
 import pygame
+import pygame.freetype
 
 
 class Game():
 
+    game_font = None
+    message = ""
+    finished = False
+
     def __init__(self):
         pygame.init()
+
+        Game.game_font = pygame.freetype.Font("font.ttf", 24)
 
         self.screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
@@ -48,18 +56,24 @@ class Game():
                 self.game_objects.remove(game_object)
 
         if Food.remaining == 0:
-            print("You have won")
+            Game.message = "YOU WIN"
+            Game.finished = True
+
 
         if Ghost.remaining >= INITIAL_AMOUNT_OF_GHOSTS * 32:
-            print("You lose")
+            Game.message = "YOU LOSE"
+            Game.finished = True
 
 
     def generate_output(self):
 
         self.screen.fill((0, 0, 0))
         
-        for gameObject in self.game_objects:
-            gameObject.draw(self.screen)
+        if not Game.finished:
+            for gameObject in self.game_objects:
+                gameObject.draw(self.screen)
+        else:
+            Game.game_font.render_to(self.screen, (40, 50), Game.message, (255, 255, 255))
 
         pygame.display.flip()
 

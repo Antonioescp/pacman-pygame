@@ -2,7 +2,7 @@ from . import GameObject
 from pygame.math import Vector2
 import pygame
 import random
-from config import GHOST_PLAYER_DETECTION_OFFSET
+from config import GHOST_PLAYER_DETECTION_OFFSET, GHOST_TIME_TO_MULTIPLY, GHOST_RUNNING_AWAY_TIME
 
 class Character(GameObject):
 
@@ -107,9 +107,6 @@ class Vaxman(Character):
 
 class Ghost(Character):
 
-    MULTIPLICATION_TIME = 30.0
-    RUNNING_AWAY_TIME = 5
-
     remaining = 0
 
     def __init__(self, vaxman, game):
@@ -159,13 +156,13 @@ class Ghost(Character):
     def update(self, deltaTime):
         self.multiplication_timer += deltaTime
 
-        if self.multiplication_timer >= Ghost.MULTIPLICATION_TIME:
+        if self.multiplication_timer >= GHOST_TIME_TO_MULTIPLY:
             self.multiplication_timer = 0
             self._multiply()
 
         self.random_turn_timer += deltaTime
 
-        if self.random_turn_timer >= self.time_to_turn:
+        if self.random_turn_timer >= self.time_to_turn and not self.running_away:
             self.random_turn_timer = 0
             self.time_to_turn = random.randint(1, 10)
             self._change_dir_randomly()
@@ -173,7 +170,7 @@ class Ghost(Character):
         if self.running_away:
             self.running_away_timer += deltaTime
 
-        if self.running_away_timer >= Ghost.RUNNING_AWAY_TIME:
+        if self.running_away_timer >= GHOST_RUNNING_AWAY_TIME:
             self.color = (255, 255, 255)
             self.running_away_timer = 0
             self.running_away = False
