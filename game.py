@@ -1,18 +1,15 @@
+from config import INITIAL_AMOUNT_OF_GHOSTS, SCREEN_HEIGHT, SCREEN_WIDTH, FRAMES_PER_SECOND, MILISECONDS_IN_SECOND
+from game_objects.characters import Ghost
+from game_objects.static import Food
 import pygame
 
+
 class Game():
-
-    FRAMES_PER_SECOND = 60
-    MILISECONDS_IN_SECOND = 1000
-    MILISECONDS_BETWEEN_FRAMES = MILISECONDS_IN_SECOND / FRAMES_PER_SECOND
-
-    SCREEN_WIDTH = 300
-    SCREEN_HEIGHT = 300
 
     def __init__(self):
         pygame.init()
 
-        self.screen = pygame.display.set_mode([Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT])
+        self.screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
         self.game_objects = []
         self.tickCount = 0
@@ -39,9 +36,9 @@ class Game():
 
     def update(self):
 
-        self.clock.tick(Game.FRAMES_PER_SECOND)
+        self.clock.tick(FRAMES_PER_SECOND)
 
-        deltaTime = (pygame.time.get_ticks() - self.tickCount) / Game.MILISECONDS_IN_SECOND
+        deltaTime = (pygame.time.get_ticks() - self.tickCount) / MILISECONDS_IN_SECOND
         self.tickCount = pygame.time.get_ticks()
         
         for game_object in self.game_objects:
@@ -49,6 +46,12 @@ class Game():
 
             if game_object.must_destroy:
                 self.game_objects.remove(game_object)
+
+        if Food.remaining == 0:
+            print("You have won")
+
+        if Ghost.remaining >= INITIAL_AMOUNT_OF_GHOSTS * 32:
+            print("You lose")
 
 
     def generate_output(self):

@@ -1,8 +1,8 @@
-from pygame.sprite import DirtySprite
 from . import GameObject
 from pygame.math import Vector2
 import pygame
 import random
+from config import GHOST_PLAYER_DETECTION_OFFSET
 
 class Character(GameObject):
 
@@ -108,7 +108,9 @@ class Vaxman(Character):
 class Ghost(Character):
 
     MULTIPLICATION_TIME = 30.0
-    RANDOM_TURN_TIME = 5.0
+    RUNNING_AWAY_TIME = 5
+
+    remaining = 0
 
     def __init__(self, vaxman, game):
         super().__init__()
@@ -118,10 +120,16 @@ class Ghost(Character):
 
         self.game = game
 
+        self.running_away = False
+        self.running_away_timer = 0
+
         # countdown for ghost multiplication
         self.multiplication_timer = 0.0
 
         self.random_turn_timer = 0.0
+        self.time_to_turn = random.randint(1, 10)
+
+        Ghost.remaining += 1
         
 
     # Changes the direction to a random direction different to current dirrection
@@ -157,9 +165,18 @@ class Ghost(Character):
 
         self.random_turn_timer += deltaTime
 
-        if self.random_turn_timer >= Ghost.RANDOM_TURN_TIME:
+        if self.random_turn_timer >= self.time_to_turn:
             self.random_turn_timer = 0
+            self.time_to_turn = random.randint(1, 10)
             self._change_dir_randomly()
+
+        if self.running_away:
+            self.running_away_timer += deltaTime
+
+        if self.running_away_timer >= Ghost.RUNNING_AWAY_TIME:
+            self.color = (255, 255, 255)
+            self.running_away_timer = 0
+            self.running_away = False
 
         # Collisions with walls
         for wall in self.walls:
@@ -202,8 +219,25 @@ class Ghost(Character):
 
         super().update(deltaTime)
 
-        # Detecting collision with player
         distance = self.position.distance_to(self.vaxman.position)
 
+        # running away from player, kind of
+        if distance <= (self.radius + self.vaxman.radius + GHOST_PLAYER_DETECTION_OFFSET) and not self.running_away:
+            if random.randint(0, 1) == 0:
+                if self.vaxman.position.x - self.position.x < 0:
+                    self.direction.xy = (1, 0)
+                else:
+                    self.direction.xy = (-1, 0)
+            else:
+                if self.vaxman.position.y - self.position.y < 0:
+                    self.direction.xy = (0, 1)
+                else:
+                    self.direction.xy = (0, -1)
+
+            self.color = (255, 0, 0)
+            self.running_away = True
+
+        # Detecting collision with player
         if distance <= (self.radius + self.vaxman.radius):
             self.must_destroy = True
+            Ghost.remaining -= 1

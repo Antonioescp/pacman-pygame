@@ -1,8 +1,10 @@
 from pygame import Vector2
-from game import Game
 from game_objects.characters import Ghost, Vaxman
 from game_objects.static import Food, Wall
+from game import Game
+from config import SCREEN_HEIGHT, SCREEN_WIDTH
 import random
+
 
 WALL_THICKNESS = 20
 
@@ -23,31 +25,31 @@ walls = []
 
 wall = Wall()
 wall.rect.width = WALL_THICKNESS
-wall.rect.height = Game.SCREEN_HEIGHT
+wall.rect.height = SCREEN_HEIGHT
 wall.rect.topleft = (0, 0)
 walls.append(wall)
 
 wall = Wall()
 wall.rect.height = WALL_THICKNESS
-wall.rect.width = Game.SCREEN_WIDTH
+wall.rect.width = SCREEN_WIDTH
 wall.rect.topleft = (0, 0)
 walls.append(wall)
 
 wall = Wall()
 wall.rect.height = WALL_THICKNESS
-wall.rect.width = Game.SCREEN_WIDTH
-wall.rect.bottomleft = (0, Game.SCREEN_HEIGHT)
+wall.rect.width = SCREEN_WIDTH
+wall.rect.bottomleft = (0, SCREEN_HEIGHT)
 walls.append(wall)
 
 wall = Wall()
-wall.rect.height = Game.SCREEN_HEIGHT
+wall.rect.height = SCREEN_HEIGHT
 wall.rect.width = WALL_THICKNESS
-wall.rect.topright = (Game.SCREEN_WIDTH, 0)
+wall.rect.topright = (SCREEN_WIDTH, 0)
 walls.append(wall)
 
 # Inner walls
-WALLS_PER_COLUMN = (Game.SCREEN_HEIGHT // WALL_THICKNESS - 2) // 2
-WALLS_PER_ROW = (Game.SCREEN_WIDTH - WALL_THICKNESS * 4) // (WALL_THICKNESS * 3)
+WALLS_PER_COLUMN = (SCREEN_HEIGHT // WALL_THICKNESS - 2) // 2
+WALLS_PER_ROW = (SCREEN_WIDTH - WALL_THICKNESS * 4) // (WALL_THICKNESS * 3)
 
 starting_position = Vector2(walls[0].rect.topright[0] + WALL_THICKNESS, walls[0].rect.topright[1] + WALL_THICKNESS * 2)
 
@@ -65,8 +67,8 @@ vax_man.walls = walls
 # creating food
 starting_position = Vector2(WALL_THICKNESS + WALL_THICKNESS // 2, WALL_THICKNESS + WALL_THICKNESS // 2)
 
-for h in range(Game.SCREEN_HEIGHT // WALL_THICKNESS - 2):
-    for w in range(Game.SCREEN_WIDTH // WALL_THICKNESS - 2):
+for h in range(SCREEN_HEIGHT // WALL_THICKNESS - 2):
+    for w in range(SCREEN_WIDTH // WALL_THICKNESS - 2):
         position = Vector2(starting_position.x + WALL_THICKNESS * w, starting_position.y + WALL_THICKNESS * h)
         in_wall = False
 
@@ -94,7 +96,7 @@ for wall in walls:
 # adding ghosts
 for n in range(0, 7):
     ghost = Ghost(vax_man, game)
-    initial_position = Vector2(Game.SCREEN_WIDTH - WALL_THICKNESS - ghost.radius - 1, WALL_THICKNESS + ghost.radius + 1)
+    initial_position = Vector2(SCREEN_WIDTH - WALL_THICKNESS - ghost.radius - 1, WALL_THICKNESS + ghost.radius + 1)
     ghost.position.xy = (initial_position.x, initial_position.y + WALL_THICKNESS * 2 * n)
     
     if random.randint(0, 1) == 0:

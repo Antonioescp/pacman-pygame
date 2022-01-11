@@ -1,13 +1,12 @@
 from pygame.math import Vector2
-from game import Game
-
+from config import SCREEN_WIDTH, SCREEN_HEIGHT
 # Monolithic class hierarchy since it is a simple game
 class GameObject():
 
     # this class encapsulates common behaviour and data present in most game objects
 
     def __init__(self):
-        self.position = Vector2(Game.SCREEN_WIDTH / 2, Game.SCREEN_HEIGHT / 2)
+        self.position = Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
         self.color = (255, 255, 255)
 

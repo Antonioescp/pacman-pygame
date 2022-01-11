@@ -3,6 +3,7 @@ import pygame
 
 class Food(GameObject):
 
+    # Counting food remaining
     remaining = 0
 
     def __init__(self, eater):
