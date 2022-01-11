@@ -12,7 +12,7 @@ class Character(GameObject):
         self.velocity = Vector2()
         self.direction = Vector2()
 
-        self.movement_speed = 85
+        self.movement_speed = 60
         self.radius = 8
 
     
@@ -107,7 +107,8 @@ class Vaxman(Character):
 
 class Ghost(Character):
 
-    MUTLIPLICATION_TIME = 30.0
+    MULTIPLICATION_TIME = 30.0
+    RANDOM_TURN_TIME = 5.0
 
     def __init__(self, vaxman, game):
         super().__init__()
@@ -119,6 +120,8 @@ class Ghost(Character):
 
         # countdown for ghost multiplication
         self.multiplication_timer = 0.0
+
+        self.random_turn_timer = 0.0
         
 
     # Changes the direction to a random direction different to current dirrection
@@ -133,22 +136,30 @@ class Ghost(Character):
 
         self.direction = directions_available[random.randint(0, len(directions_available) - 1)]
 
-    
+
+    # spawns a new ghost to opposite direction
+    def _multiply(self):
+
+        new_ghost = Ghost(self.vaxman, self.game)
+        new_ghost.position = Vector2(self.position)
+        new_ghost.direction = Vector2(self.direction * -1)
+        new_ghost.walls = self.walls
+
+        self.game.add_game_object(new_ghost)
+
+
     def update(self, deltaTime):
         self.multiplication_timer += deltaTime
 
-        print(self.multiplication_timer)
-
-        if self.multiplication_timer >= Ghost.MUTLIPLICATION_TIME:
+        if self.multiplication_timer >= Ghost.MULTIPLICATION_TIME:
             self.multiplication_timer = 0
+            self._multiply()
 
-            new_ghost = Ghost(self.vaxman, self.game)
-            new_ghost.position = Vector2(self.position)
-            new_ghost.direction = Vector2(self.direction * -1)
-            new_ghost.walls = self.walls
+        self.random_turn_timer += deltaTime
 
-            self.game.add_game_object(new_ghost)
-
+        if self.random_turn_timer >= Ghost.RANDOM_TURN_TIME:
+            self.random_turn_timer = 0
+            self._change_dir_randomly()
 
         # Collisions with walls
         for wall in self.walls:
@@ -191,6 +202,7 @@ class Ghost(Character):
 
         super().update(deltaTime)
 
+        # Detecting collision with player
         distance = self.position.distance_to(self.vaxman.position)
 
         if distance <= (self.radius + self.vaxman.radius):
